@@ -6,6 +6,7 @@
 | ------- | --- |
 | [practice contest](./practice) | https://atcoder.jp/contests/practice |
 | [AtCoder Beginners Selection](./abs) | https://atcoder.jp/contests/abs |
+| [競プロ典型90問](./typical90) | https://atcoder.jp/contests/typical90 |
 
 ## Run tasks
 
