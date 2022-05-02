@@ -28,5 +28,5 @@ cd ${contest}
 
 poetry install
 
-poetry run pytest tests/
+poetry run pytest
 ```
