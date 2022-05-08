@@ -4,6 +4,7 @@ from typical90.f import RMQ, solve_f
 def test_solve_f():
     assert solve_f(7, 3, "atcoder") == "acd"
     assert solve_f(14, 5, "kittyonyourlap") == "inlap"
+    assert solve_f(22, 10, "competitiveprogramming") == "ceegamming"
 
     assert solve_f(3, 3, "aaa") == "aaa"
     assert solve_f(5, 3, "aaaaa") == "aaa"
