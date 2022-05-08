@@ -22,8 +22,8 @@ def test_rmq_build():
 
 
 def test_rmq_query():
-    rmq = RMQ([1, 3, 1, 0, 3], inf=100)
-    assert rmq.query(q_left=0, q_right=5) == 0
-    assert rmq.query(q_left=0, q_right=3) == 1
-    assert rmq.query(q_left=4, q_right=5) == 3
-    assert rmq.query(q_left=5, q_right=5) == 100
+    rmq = RMQ([1, 3, 1, 0, 3, 0], inf=100)
+    assert rmq.query(q_left=0, q_right=6) == (0, [3, 5])
+    assert rmq.query(q_left=0, q_right=3) == (1, [0, 2])
+    assert rmq.query(q_left=4, q_right=5) == (3, [4])
+    assert rmq.query(q_left=6, q_right=6) == (100, [])
