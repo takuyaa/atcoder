@@ -19,20 +19,9 @@ def solve_f(N: int, K: int, S: str) -> str:
     elif K == N:
         return S
 
-    s_ch = min(S[: N - K + 1])
+    rmq = RMQ(array=[ord(c) for c in S])
 
-    str_min = "{"  # "{" is bigger than "z"
-    for i in range(N - K, -1, -1):
-        if S[i] != s_ch:
-            continue
-
-        sub_ans = s_ch + solve_f(N - i - 1, K - 1, S[i + 1 :])
-        assert len(sub_ans) == K
-
-        if sub_ans < str_min:
-            str_min = sub_ans
-
-    return str_min
+    return sub(N, S, rmq, left=0, k=K)
 
 
 class RMQ:
@@ -55,8 +44,8 @@ class RMQ:
 
         # internal data representation for segment tree
         # number of all elements of the segment tree is `2 * N - 1`
-        self.data = [inf] * (2**self.n_leaves - 1)
-        self.indices = [[] for _ in range(2**self.n_leaves - 1)]
+        self.data = [inf] * (2 * self.n_leaves - 1)
+        self.indices = [[] for _ in range(2 * self.n_leaves - 1)]
 
         # init leaves
         for i in range(len(array)):
@@ -93,6 +82,25 @@ class RMQ:
             return (r_min, r_indices)
         else:
             return (l_min, l_indices + r_indices)
+
+
+def sub(N: int, S: str, rmq: RMQ, left: int, k: int) -> str:
+    if k == 0:
+        return ""
+    elif k == (N - left):
+        return S[left:N]
+
+    (min_ch, min_idx) = rmq.query(q_left=left, q_right=(N - k + 1))
+
+    str_min = "{"  # "{" is bigger than "zzz..."
+    for i in min_idx:
+        sub_ans = chr(min_ch) + sub(N=N, S=S, rmq=rmq, left=(i + 1), k=(k - 1))
+        assert len(sub_ans) == k
+
+        if sub_ans < str_min:
+            str_min = sub_ans
+
+    return str_min
 
 
 if __name__ == "__main__":
