@@ -21,7 +21,17 @@ def solve_f(N: int, K: int, S: str) -> str:
 
     rmq = RMQ(array=[ord(c) for c in S])
 
-    return sub(N, S, rmq, left=0, k=K)
+    min_str = ""
+    head_pos = 0
+    for k in range(K, 0, -1):
+        (_, min_idx) = rmq.query(q_left=head_pos, q_right=(N - k + 1))
+        assert len(min_idx) > 0
+
+        min_pos = min_idx[0]
+        min_str += S[min_pos]
+        head_pos = min_pos + 1
+
+    return min_str
 
 
 class RMQ:
@@ -82,25 +92,6 @@ class RMQ:
             return (r_min, r_indices)
         else:
             return (l_min, l_indices + r_indices)
-
-
-def sub(N: int, S: str, rmq: RMQ, left: int, k: int) -> str:
-    if k == 0:
-        return ""
-    elif k == (N - left):
-        return S[left:N]
-
-    (min_ch, min_idx) = rmq.query(q_left=left, q_right=(N - k + 1))
-
-    str_min = "{"  # "{" is bigger than "zzz..."
-    for i in min_idx:
-        sub_ans = chr(min_ch) + sub(N=N, S=S, rmq=rmq, left=(i + 1), k=(k - 1))
-        assert len(sub_ans) == k
-
-        if sub_ans < str_min:
-            str_min = sub_ans
-
-    return str_min
 
 
 if __name__ == "__main__":
