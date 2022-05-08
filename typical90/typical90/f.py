@@ -2,8 +2,6 @@ import math
 import sys
 from typing import List, Tuple
 
-sys.setrecursionlimit(1 << 24)
-
 
 def main():
     N, K = [int(s) for s in input().split()]
