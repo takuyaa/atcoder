@@ -7,7 +7,7 @@
     },
     // pytest
     "python.testing.pytestArgs": [
-        "-v"
+        "-vv"
     ],
     "python.testing.unittestEnabled": false,
     "python.testing.pytestEnabled": true,
