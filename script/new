@@ -1,0 +1,154 @@
+#! /usr/bin/env bash
+
+readonly script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+readonly root_dir="$(cd "$(dirname "${script_dir}")" && pwd)"
+readonly root_name="$(basename "${root_dir}")"
+
+if [[ $# -ne 1 ]]; then
+    echo "Usage: $0 contest_name"
+    exit 2
+fi
+
+readonly contest=$1
+readonly contest_path="${root_dir}/${contest}"
+
+if [[ -d "${contest_path}" ]]; then
+    echo "${contest_path} already exist." 1>&2
+    exit 3
+fi
+
+# Create a new poetry project
+mkdir "${contest_path}"
+
+# Environment variable file for direnv
+echo "export contest=${contest}" > ${contest_path}/.envrc
+
+# Install packages using poetry
+(
+    cd ${contest_path}
+    bash -c "poetry init -n --name ${contest} --author \"Takuya Asano <takuya.a@gmail.com>\" --python 3.8.10"
+    bash -c "poetry install"
+    bash -c "poetry add -D flake8 black isort mypy"
+)
+
+# Python dev tool settings
+cat << EOF >> "${contest_path}/pyproject.toml"
+
+[tool.black]
+line-length = 119
+
+[tool.isort]
+profile = "black"
+line_length = 119
+EOF
+cat << EOF > "${contest_path}/.flake8"
+[flake8]
+extend-ignore = E203, E741
+max-line-length = 119
+EOF
+
+# VS Code settings
+mkdir "${contest_path}/.vscode"
+cat << EOF > "${contest_path}/.vscode/launch.json"
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Python: Current File",
+            "type": "python",
+            "request": "launch",
+            "program": "\${file}",
+            "console": "integratedTerminal",
+            "justMyCode": true
+        }
+    ]
+}
+EOF
+cat << EOF > "${contest_path}/.vscode/settings.json"
+{
+    "[python]": {
+        "editor.codeActionsOnSave": {
+            // isort
+            "source.organizeImports": true
+        }
+    },
+    // pytest
+    "python.testing.pytestArgs": [
+        "-vv"
+    ],
+    "python.testing.unittestEnabled": false,
+    "python.testing.pytestEnabled": true,
+    // flake8
+    "python.linting.flake8Enabled": true,
+    // black
+    "editor.formatOnSave": true,
+    "python.formatting.provider": "black",
+    // mypy
+    "python.linting.mypyEnabled": true
+}
+EOF
+
+# Python files
+mkdir "${contest_path}/${contest}"
+cat << EOF > "${contest_path}/${contest}/__init__.py"
+__version__ = "0.1.0"
+EOF
+mkdir "${contest_path}/tests"
+touch "${contest_path}/tests/__init__.py"
+
+# Script files
+mkdir "${contest_path}/script"
+cat > "${contest_path}/script/add" << EEOF
+#! /usr/bin/env bash
+
+readonly script_dir="\$(cd "\$(dirname "\${BASH_SOURCE[0]}")" && pwd)"
+readonly root_dir="\$(cd "\$(dirname "\${script_dir}")" && pwd)"
+readonly root_name="\$(basename "\${root_dir}")"
+
+if [[ \$# -ne 1 ]]; then
+    echo "Usage: \$0 task_name"
+    exit 2
+fi
+
+readonly task=\$1
+readonly src_path="\${root_dir}/${contest}/\${task}.py"
+readonly test_path="\${root_dir}/tests/test_\${task}.py"
+
+if [[ -f "\${src_path}" ]]; then
+    echo "\${src_path} already exist." 1>&2
+    exit 3
+fi
+
+if [[ -f "\${test_path}" ]]; then
+    echo "\${test_path} already exist." 1>&2
+    exit 4
+fi
+
+# Solution code template
+cat << EOF > "\${src_path}"
+def main():
+    N = int(input())
+    ans = solve_\${task}(N)
+    print(f"{ans}")
+
+
+def solve_\${task}(N: int) -> int:
+    return N
+
+
+if __name__ == "__main__":
+    main()
+EOF
+echo "\${src_path} has been created."
+
+# Test code template
+cat << EOF > "\${test_path}"
+from ${contest}.\${task} import solve_\${task}
+
+
+def test_solve_\${task}():
+    assert solve_\${task}(1) == 1
+EOF
+echo "\${test_path} has been created."
+EEOF
+chmod 755 "${contest_path}/script/add"
