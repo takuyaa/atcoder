@@ -28,7 +28,7 @@ echo "export contest=${contest}" > ${contest_path}/.envrc
     cd ${contest_path}
     bash -c "poetry init -n --name ${contest} --author \"Takuya Asano <takuya.a@gmail.com>\" --python 3.8.10"
     bash -c "poetry install"
-    bash -c "poetry add -D flake8 black isort mypy"
+    bash -c "poetry add -D flake8 black isort mypy pytest"
 )
 
 # Python dev tool settings
