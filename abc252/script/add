@@ -1,0 +1,51 @@
+#! /usr/bin/env bash
+
+readonly script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+readonly root_dir="$(cd "$(dirname "${script_dir}")" && pwd)"
+readonly root_name="$(basename "${root_dir}")"
+
+if [[ $# -ne 1 ]]; then
+    echo "Usage: $0 task_name"
+    exit 2
+fi
+
+readonly task=$1
+readonly src_path="${root_dir}/abc252/${task}.py"
+readonly test_path="${root_dir}/tests/test_${task}.py"
+
+if [[ -f "${src_path}" ]]; then
+    echo "${src_path} already exist." 1>&2
+    exit 3
+fi
+
+if [[ -f "${test_path}" ]]; then
+    echo "${test_path} already exist." 1>&2
+    exit 4
+fi
+
+# Solution code template
+cat << EOF > "${src_path}"
+def main():
+    N = int(input())
+    ans = solve_${task}(N)
+    print(f"{ans}")
+
+
+def solve_${task}(N: int) -> int:
+    return N
+
+
+if __name__ == "__main__":
+    main()
+EOF
+echo "${src_path} has been created."
+
+# Test code template
+cat << EOF > "${test_path}"
+from abc252.${task} import solve_${task}
+
+
+def test_solve_${task}():
+    assert solve_${task}(1) == 1
+EOF
+echo "${test_path} has been created."
