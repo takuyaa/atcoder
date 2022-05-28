@@ -20,9 +20,6 @@ fi
 # Create a new poetry project
 mkdir "${contest_path}"
 
-# Environment variable file for direnv
-echo "export contest=${contest}" > ${contest_path}/.envrc
-
 # Install packages using poetry
 (
     cd ${contest_path}
