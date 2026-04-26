@@ -11,22 +11,17 @@
 ## Run tasks
 
 ```bash
-contest=<contest_name>
-cd ${contest}
-
+cd <contest>
 uv sync
 
-task=<task_name>
-uv run python -m ${contest}.${task}
+just r <task>   # uv run python -m <contest>.<task>
 ```
 
 ## Run tests
 
 ```bash
-contest=<contest_name>
-cd ${contest}
-
+cd <contest>
 uv sync
 
-uv run pytest
+just t          # uv run pytest
 ```

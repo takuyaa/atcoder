@@ -54,6 +54,23 @@ EOF
 
 # Pin Python version
 echo "3.8" > "${contest_path}/.python-version"
+
+# Justfile (task runner)
+cat << EOF > "${contest_path}/Justfile"
+contest := \`basename \$(pwd)\`
+
+# List available recipes
+default:
+    @just --list
+
+# Run a task: just r <task>
+r task:
+    uv run python -m {{contest}}.{{task}}
+
+# Run tests (forwards extra args to pytest): just t [pytest args]
+t *args:
+    uv run pytest {{args}}
+EOF
 cat << EOF > "${contest_path}/.flake8"
 [flake8]
 extend-ignore = E203, E741

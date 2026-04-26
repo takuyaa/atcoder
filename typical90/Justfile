@@ -1,0 +1,13 @@
+contest := `basename $(pwd)`
+
+# List available recipes
+default:
+    @just --list
+
+# Run a task: just r <task>
+r task:
+    uv run python -m {{contest}}.{{task}}
+
+# Run tests (forwards extra args to pytest): just t [pytest args]
+t *args:
+    uv run pytest {{args}}
