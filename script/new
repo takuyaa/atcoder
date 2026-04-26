@@ -17,19 +17,32 @@ if [[ -d "${contest_path}" ]]; then
     exit 3
 fi
 
-# Create a new poetry project
+# Create a new uv project
 mkdir "${contest_path}"
 
-# Install packages using poetry
-(
-    cd ${contest_path}
-    bash -c "poetry init -n --name ${contest} --author \"Takuya Asano <takuya.a@gmail.com>\" --python 3.8.10"
-    bash -c "poetry install"
-    bash -c "poetry add -D flake8 black isort mypy pytest"
-)
+# pyproject.toml (uv application mode)
+cat << EOF > "${contest_path}/pyproject.toml"
+[project]
+name = "${contest}"
+version = "0.1.0"
+description = ""
+authors = [
+    { name = "Takuya Asano", email = "takuya.a@gmail.com" },
+]
+requires-python = ">=3.8,<3.13"
+dependencies = []
 
-# Python dev tool settings
-cat << EOF >> "${contest_path}/pyproject.toml"
+[dependency-groups]
+dev = [
+    "flake8",
+    "black",
+    "isort",
+    "mypy",
+    "pytest",
+]
+
+[tool.uv]
+package = false
 
 [tool.black]
 line-length = 119
@@ -38,6 +51,9 @@ line-length = 119
 profile = "black"
 line_length = 119
 EOF
+
+# Pin Python version
+echo "3.8" > "${contest_path}/.python-version"
 cat << EOF > "${contest_path}/.flake8"
 [flake8]
 extend-ignore = E203, E741
@@ -149,3 +165,10 @@ EOF
 echo "\${test_path} has been created."
 EEOF
 chmod 755 "${contest_path}/script/add"
+
+# Lock and install dependencies via uv
+(
+    cd "${contest_path}"
+    uv lock
+    uv sync
+)

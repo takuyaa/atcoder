@@ -12,5 +12,8 @@ __pycache__/
 .dmypy.json
 dmypy.json
 
+# uv
+.venv/
+
 ### VisualStudioCode ###
 .vscode/*

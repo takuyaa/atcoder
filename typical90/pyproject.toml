@@ -1,23 +1,24 @@
-[tool.poetry]
+[project]
 name = "typical90"
 version = "0.1.0"
 description = ""
-authors = ["Your Name <you@example.com>"]
+authors = [
+    { name = "Takuya Asano", email = "takuya.a@gmail.com" },
+]
+requires-python = ">=3.8,<3.13"
+dependencies = []
 
-[tool.poetry.dependencies]
-python = "~3.8"
+[dependency-groups]
+dev = [
+    "flake8>=4.0.1,<5.0.0",
+    "black>=22.3.0,<23.0.0",
+    "isort>=5.10.1,<6.0.0",
+    "mypy>=0.950,<0.960",
+    "pytest>=5.2,<6.0",
+]
 
-[tool.poetry.dev-dependencies]
-pytest = "^5.2"
-flake8 = "^4.0.1"
-black = "^22.3.0"
-isort = "^5.10.1"
-mypy = "^0.950"
-
-[build-system]
-requires = ["poetry-core>=1.0.0"]
-build-backend = "poetry.core.masonry.api"
-
+[tool.uv]
+package = false
 
 [tool.black]
 line-length = 119

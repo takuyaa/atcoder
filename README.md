@@ -14,10 +14,10 @@
 contest=<contest_name>
 cd ${contest}
 
-poetry install
+uv sync
 
 task=<task_name>
-poetry run python -m ${contest}.${task}
+uv run python -m ${contest}.${task}
 ```
 
 ## Run tests
@@ -26,7 +26,7 @@ poetry run python -m ${contest}.${task}
 contest=<contest_name>
 cd ${contest}
 
-poetry install
+uv sync
 
-poetry run pytest
+uv run pytest
 ```
