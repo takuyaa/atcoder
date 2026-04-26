@@ -14,7 +14,7 @@
 cd <contest>
 uv sync
 
-just r <task>   # uv run python -m <contest>.<task>
+just run <task>   # alias: just r <task>
 ```
 
 ## Run tests
@@ -23,5 +23,5 @@ just r <task>   # uv run python -m <contest>.<task>
 cd <contest>
 uv sync
 
-just t          # uv run pytest
+just test         # alias: just t
 ```

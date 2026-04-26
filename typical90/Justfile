@@ -1,13 +1,16 @@
 contest := `basename $(pwd)`
 
+alias r := run
+alias t := test
+
 # List available recipes
 default:
     @just --list
 
-# Run a task: just r <task>
-r task:
+# Run a task: just run <task>  (alias: r)
+run task:
     uv run python -m {{contest}}.{{task}}
 
-# Run tests (forwards extra args to pytest): just t [pytest args]
-t *args:
+# Run tests (forwards extra args to pytest): just test [pytest args]  (alias: t)
+test *args:
     uv run pytest {{args}}
